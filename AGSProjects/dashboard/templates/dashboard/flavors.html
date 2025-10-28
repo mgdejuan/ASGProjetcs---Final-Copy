@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flavors Management</title>
+    <link rel="stylesheet" href="{% static 'css/crud.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>Flavors Management</h1>
+
+    <form method="post" class="create-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Flavor Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter flavor name" required>
+        </div>
+        <div class="form-group">
+            <label for="price">Price (₱)</label>
+            <input type="number" id="price" name="price" placeholder="Enter price" required>
+        </div>
+        <button type="submit">Add Flavor</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Flavor Name</th>
+            <th>Price (₱)</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <!-- ✅ Dynamic data -->
+        <tbody>
+        {% for f in flavors %}
+        <tr>
+            <td>{{ f.id }}</td>
+            <td>{{ f.name }}</td>
+            <td>{{ f.price }}</td>
+            <td class="action-buttons">
+                <a href="{% url 'update_flavor' f.id %}"><button class="edit-btn">Edit</button></a>
+                <a href="{% url 'delete_flavor' f.id %}"><button class="delete-btn">Delete</button></a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No flavors added yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

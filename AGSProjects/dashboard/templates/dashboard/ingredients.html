@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingredients Management</title>
+    <link rel="stylesheet" href="{% static 'css/crud.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>Ingredients Management</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="ingredient">Ingredient Name</label>
+            <input type="text" id="ingredient" name="ingredient" placeholder="Enter ingredient" required>
+        </div>
+        <div class="form-group">
+            <label for="stock">Stock Quantity</label>
+            <input type="number" id="stock" name="stock" placeholder="Enter stock" required>
+        </div>
+        <button type="submit">Add Ingredient</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ingredient Name</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>Milk</td>
+            <td>100</td>
+            <td class="action-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
