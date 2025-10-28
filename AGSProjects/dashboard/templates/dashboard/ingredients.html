@@ -8,42 +8,54 @@
 </head>
 <body>
 <div class="container">
+
+    <a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
+
     <h1>Ingredients Management</h1>
 
-    <form method="post">
+    <form method="post" class="create-form">
         {% csrf_token %}
         <div class="form-group">
-            <label for="ingredient">Ingredient Name</label>
-            <input type="text" id="ingredient" name="ingredient" placeholder="Enter ingredient" required>
+            <label for="name">Ingredient Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter ingredient name" required>
         </div>
         <div class="form-group">
-            <label for="stock">Stock Quantity</label>
-            <input type="number" id="stock" name="stock" placeholder="Enter stock" required>
+            <label for="quantity">Quantity (kg or pcs)</label>
+            <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
         </div>
         <button type="submit">Add Ingredient</button>
     </form>
 
     <table>
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Ingredient Name</th>
-            <th>Stock</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>Ingredient Name</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>1</td>
-            <td>Milk</td>
-            <td>100</td>
-            <td class="action-buttons">
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-            </td>
-        </tr>
+            {% for i in ingredients %}
+            <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.name }}</td>
+                <td>{{ i.quantity }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'update_ingredient' i.id %}">
+                        <button type="button" class="edit-btn">Edit</button>
+                    </a>
+                    <a href="{% url 'delete_ingredient' i.id %}">
+                        <button type="button" class="delete-btn">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No ingredients added yet.</td></tr>
+            {% endfor %}
         </tbody>
     </table>
+
 </div>
 </body>
 </html>
