@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About</title>
+
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #fff5f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: #ffd6d6;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      color: #333;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background-color: #ffbebe;
+    }
+
+    .container {
+      background-color: #fffbea;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 40px 50px;
+      border-radius: 15px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff6b6b;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    h3 {
+      color: #ff8787;
+      margin-top: 25px;
+    }
+
+    p {
+      line-height: 1.7;
+      text-align: justify;
+    }
+
+    .team-section {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .team-members {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .member-card {
+      background: #fff4f4;
+      border-radius: 12px;
+      padding: 20px;
+      width: 200px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .member-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .member-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 3px solid #ff9b9b;
+    }
+
+    .member-card h4 {
+      color: #ff6b6b;
+      margin: 8px 0 4px 0;
+    }
+
+    .member-card p {
+      font-size: 13px;
+      color: #555;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back Button -->
+  <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h1>About</h1>
+    <p>
+      <strong>Flavors Management</strong> is a system created to help manage and organize flavor products efficiently.
+      It allows users to add, update, and track inventory while ensuring accuracy and convenience in the process.
+    </p>
+
+    <h3>Purpose</h3>
+    <p>
+      The purpose of this system is to simplify product management for small businesses by providing
+      an easy-to-use platform for monitoring and organizing product information.
+    </p>
+
+    <h3>Goal</h3>
+    <p>
+      Our goal is to help businesses save time, reduce manual errors, and maintain smooth operations
+      through an efficient and user-friendly management system.
+    </p>
+
+    <div class="team-section">
+      <h3>Developed By</h3>
+      <div class="team-members">
+        <div class="member-card">
+          <img src="https://via.placeholder.com/100" alt="Member 1">
+          <h4>Lexie Santos</h4>
+          <p>Project Manager</p>
+        </div>
+
+        <div class="member-card">
+          <img src="https://via.placeholder.com/100" alt="Member 2">
+          <h4>John Reyes</h4>
+          <p>Lead Developer</p>
+        </div>
+
+        <div class="member-card">
+          <img src="https://via.placeholder.com/100" alt="Member 3">
+          <h4>Maria Cruz</h4>
+          <p>UI/UX Designer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

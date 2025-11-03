@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sweets N’ Treats</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul>
+                <li><a href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="{% url 'inventory' %}"><i class="fa-solid fa-cube"></i> Inventory</a></li>
+                <li><a href="{% url 'notifications' %}"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+                <li><a href="{% url 'log_history' %}"><i class="fa-solid fa-clipboard-list"></i> Log history</a></li>
+                <li><a href="{% url 'about' %}"><i class="fa-solid fa-circle-info"></i> About</a></li>
+                <li class="logout"><a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1>Dashboard</h1>
+                <div class="user-info">
+                    <span>{{ request.user.username|title }}</span>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </header>
+
+            <!-- Cards section (now clickable) -->
+            <section class="cards">
+                <a href="{% url 'flavors' %}" class="card flavor">
+                    <i class="fa-solid fa-ice-cream"></i>
+                    <p>Flavors</p>
+                </a>
+                <a href="{% url 'ingredients' %}" class="card ingredients">
+                    <i class="fa-solid fa-bowl-food"></i>
+                    <p>Ingredients</p>
+                </a>
+                <a href="{% url 'toppings' %}" class="card toppings">
+                    <i class="fa-solid fa-cheese"></i>
+                    <p>Toppings</p>
+                </a>
+                <a href="{% url 'packaging' %}" class="card packaging">
+                    <i class="fa-solid fa-box"></i>
+                    <p>Packaging</p>
+                </a>
+            </section>
+
+            <!-- Log Table -->
+            <section class="log-section">
+                <h2>Logs for Tracking</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date and time</th>
+                            <th>Product name</th>
+                            <th>Stock Status</th>
+                            <th>Action taken</th>
+                            <th>Staff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>09-29-25</td>
+                            <td>Sprinkles</td>
+                            <td>Low</td>
+                            <td>For Restock</td>
+                            <td>Staff Jane</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
