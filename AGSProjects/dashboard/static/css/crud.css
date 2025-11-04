@@ -91,3 +91,20 @@ table th {
 .delete-btn:hover {
     background-color: #be2617;
 }
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 15px;
+    background-color: #858796;
+    color: white;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #6c757d;
+}
+

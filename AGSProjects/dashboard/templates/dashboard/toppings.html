@@ -8,16 +8,19 @@
 </head>
 <body>
 <div class="container">
+
+    <a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
+
     <h1>Toppings Management</h1>
 
-    <form method="post">
+    <form method="post" class="create-form">
         {% csrf_token %}
         <div class="form-group">
-            <label for="topping">Topping Name</label>
-            <input type="text" id="topping" name="topping" placeholder="Enter topping name" required>
+            <label for="name">Topping Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter topping name" required>
         </div>
         <div class="form-group">
-            <label for="price">Additional Price (₱)</label>
+            <label for="price">Price (₱)</label>
             <input type="number" id="price" name="price" placeholder="Enter price" required>
         </div>
         <button type="submit">Add Topping</button>
@@ -25,25 +28,34 @@
 
     <table>
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Topping Name</th>
-            <th>Additional Price (₱)</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>Topping Name</th>
+                <th>Price (₱)</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>1</td>
-            <td>Sprinkles</td>
-            <td>10</td>
-            <td class="action-buttons">
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-            </td>
-        </tr>
+            {% for t in toppings %}
+            <tr>
+                <td>{{ t.id }}</td>
+                <td>{{ t.name }}</td>
+                <td>{{ t.price }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'update_topping' t.id %}">
+                        <button type="button" class="edit-btn">Edit</button>
+                    </a>
+                    <a href="{% url 'delete_topping' t.id %}">
+                        <button type="button" class="delete-btn">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No toppings added yet.</td></tr>
+            {% endfor %}
         </tbody>
     </table>
+
 </div>
 </body>
 </html>

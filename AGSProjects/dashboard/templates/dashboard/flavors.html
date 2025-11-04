@@ -8,8 +8,13 @@
 </head>
 <body>
 <div class="container">
+
+    <!-- ✅ Back to Dashboard Button -->
+    <a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
+
     <h1>Flavors Management</h1>
 
+    <!-- ✅ Add Flavor Form -->
     <form method="post" class="create-form">
         {% csrf_token %}
         <div class="form-group">
@@ -23,33 +28,37 @@
         <button type="submit">Add Flavor</button>
     </form>
 
+    <!-- ✅ Flavors Table -->
     <table>
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Flavor Name</th>
-            <th>Price (₱)</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>Flavor Name</th>
+                <th>Price (₱)</th>
+                <th>Actions</th>
+            </tr>
         </thead>
-
-        <!-- ✅ Dynamic data -->
         <tbody>
-        {% for f in flavors %}
-        <tr>
-            <td>{{ f.id }}</td>
-            <td>{{ f.name }}</td>
-            <td>{{ f.price }}</td>
-            <td class="action-buttons">
-                <a href="{% url 'update_flavor' f.id %}"><button class="edit-btn">Edit</button></a>
-                <a href="{% url 'delete_flavor' f.id %}"><button class="delete-btn">Delete</button></a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="4">No flavors added yet.</td></tr>
-        {% endfor %}
+            {% for f in flavors %}
+            <tr>
+                <td>{{ f.id }}</td>
+                <td>{{ f.name }}</td>
+                <td>{{ f.price }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'update_flavor' f.id %}">
+                        <button type="button" class="edit-btn">Edit</button>
+                    </a>
+                    <a href="{% url 'delete_flavor' f.id %}">
+                        <button type="button" class="delete-btn">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No flavors added yet.</td></tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
+
 </body>
 </html>
