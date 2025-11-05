@@ -1,63 +1,291 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Packaging Management</title>
-    <link rel="stylesheet" href="{% static 'css/crud.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PACKAGING MANAGEMENTS</title>
+
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #f9f9f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: #FFD897;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      color: #333;
+      cursor: pointer;
+      margin: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: #ffcc80;
+    }
+
+    .container {
+      background-color: #fffbea;
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      text-align: center;
+      color: #f3b04d;
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
+
+    .form-section {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #555;
+    }
+
+    input {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: none;
+      background-color: #e5e0c3;
+      font-size: 14px;
+      width: 180px;
+      outline: none;
+    }
+
+    .add-btn {
+      background-color: #FFD897;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 15px;
+      color: #333;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-btn:hover {
+      background-color: #f3b04d;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      font-size: 14px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #FFD897;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      margin: 3px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .edit-btn {
+      background-color: #ffcc80;
+      color: #333;
+    }
+
+    .edit-btn:hover {
+      background-color: #f3b04d;
+      color: white;
+    }
+
+    .delete-btn {
+      background-color: #ffcc80;
+      color: #333;
+    }
+
+    .delete-btn:hover {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    input.quantity-input {
+      width: 70px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
+  <button class="back-btn" onclick="window.location.href='home.html'">← Back to Dashboard</button>
 
-    <a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
+  <div class="container">
+    <h2>PACKAGING MANAGEMENTS</h2>
 
-    <h1>Packaging Management</h1>
+    <div class="form-section">
+      <div>
+        <label>Packaging name:</label><br>
+        <input type="text" id="PackagingName" placeholder="Enter packaging name">
+      </div>
+      <div>
+        <label>Quantity:</label><br>
+        <input type="number" id="quantity" placeholder="0" min="0">
+      </div>
+      <div>
+        <label>Price:</label><br>
+        <input type="text" id="price" placeholder="Enter price">
+      </div>
+      <button class="add-btn" id="addPackagingBtn">Add Packaging</button>
+    </div>
 
-    <!-- Create Packaging Form -->
-    <form method="post" class="create-form">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="type">Packaging Type</label>
-            <input type="text" id="type" name="type" placeholder="Enter packaging type" required>
-        </div>
-        <div class="form-group">
-            <label for="cost">Cost (₱)</label>
-            <input type="number" id="cost" name="cost" placeholder="Enter packaging cost" required>
-        </div>
-        <button type="submit">Add Packaging</button>
-    </form>
-
-    <!-- Display Existing Packaging -->
     <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Packaging Type</th>
-                <th>Cost (₱)</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in packaging_list %}
-            <tr>
-                <td>{{ p.id }}</td>
-                <td>{{ p.type }}</td>
-                <td>{{ p.cost }}</td>
-                <td class="action-buttons">
-                    <a href="{% url 'update_packaging' p.id %}">
-                        <button type="button" class="edit-btn">Edit</button>
-                    </a>
-                    <a href="{% url 'delete_packaging' p.id %}">
-                        <button type="button" class="delete-btn">Delete</button>
-                    </a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="4">No packaging items added yet.</td></tr>
-            {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th>ID:</th>
+          <th>Packaging name:</th>
+          <th>Price:</th>
+          <th>Quantity:</th>
+          <th>Actions:</th>
+        </tr>
+      </thead>
+      <tbody id="PackagingTableBody">
+        <!-- Table data will load here -->
+      </tbody>
     </table>
+  </div>
 
-</div>
+  <script>
+    const addBtn = document.getElementById('addPackagingBtn');
+    const PackagingNameInput = document.getElementById('PackagingName');
+    const priceInput = document.getElementById('price');
+    const quantityInput = document.getElementById('quantity');
+    const tableBody = document.getElementById('PackagingTableBody');
+
+    let Packaging = JSON.parse(localStorage.getItem('Packaging')) || [];
+    let idCounter = Packaging.length ? Math.max(...Packaging.map(t => t.id)) + 1 : 1;
+
+    function saveToLocalStorage() {
+      localStorage.setItem('Packaging', JSON.stringify(Packaging));
+    }
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+      Packaging.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.name}</td>
+          <td>${item.price}</td>
+          <td><input type="number" class="quantity-input" value="${item.quantity}" min="0"></td>
+          <td>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </td>
+        `;
+
+        // Quantity update
+        row.querySelector('.quantity-input').addEventListener('change', e => {
+          item.quantity = parseInt(e.target.value) || 0;
+          saveToLocalStorage();
+        });
+
+        // Delete
+        row.querySelector('.delete-btn').addEventListener('click', () => {
+          Packaging = Packaging.filter(p => p.id !== item.id);
+          saveToLocalStorage();
+          renderTable();
+        });
+
+        // Edit
+        row.querySelector('.edit-btn').addEventListener('click', () => {
+          const newName = prompt("Edit packaging name:", item.name);
+          const newPrice = prompt("Edit price:", item.price);
+          const newQuantity = prompt("Edit quantity:", item.quantity);
+
+          if (newName !== null && newPrice !== null && newQuantity !== null) {
+            item.name = newName.trim() || item.name;
+            item.price = newPrice.trim() || item.price;
+            item.quantity = parseInt(newQuantity) || item.quantity;
+            saveToLocalStorage();
+            renderTable();
+          }
+        });
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    function addPackaging() {
+      const name = PackagingNameInput.value.trim();
+      const price = priceInput.value.trim();
+      const quantity = parseInt(quantityInput.value) || 0;
+
+      if (!name || !price) {
+        alert("Please fill out the name and price!");
+        return;
+      }
+
+      const newPackaging = {
+        id: idCounter++,
+        name,
+        price,
+        quantity
+      };
+
+      Packaging.push(newPackaging);
+      saveToLocalStorage();
+      renderTable();
+
+      PackagingNameInput.value = "";
+      priceInput.value = "";
+      quantityInput.value = "";
+    }
+
+    addBtn.addEventListener('click', addPackaging);
+    renderTable();
+  </script>
 </body>
 </html>
