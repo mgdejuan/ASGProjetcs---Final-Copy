@@ -11,11 +11,9 @@
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <ul>
                 <li><a href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a></li>
-                <li><a href="{% url 'inventory' %}"><i class="fa-solid fa-cube"></i> Inventory</a></li>
                 <li><a href="{% url 'notifications' %}"><i class="fa-solid fa-bell"></i> Notifications</a></li>
                 <li><a href="{% url 'log_history' %}"><i class="fa-solid fa-clipboard-list"></i> Log history</a></li>
                 <li><a href="{% url 'about' %}"><i class="fa-solid fa-circle-info"></i> About</a></li>
@@ -23,7 +21,6 @@
             </ul>
         </aside>
 
-        <!-- Main content -->
         <main class="main-content">
             <header class="topbar">
                 <h1>Dashboard</h1>
@@ -31,12 +28,11 @@
                     <a href="{% url 'notifications' %}" class="notification-icon" title="View Notifications">
                         <i class="fa-solid fa-bell"></i>
                     </a>
-                    <span>{{ request.user.username|title }}</span>
+                    <span>{{ request.user.username|default:"Admin"|title }}</span>
                     <i class="fa-solid fa-user"></i>
                 </div>
             </header>
 
-            <!-- Cards section (now clickable) -->
             <section class="cards">
                 <a href="{% url 'flavors' %}" class="card flavor">
                     <i class="fa-solid fa-ice-cream"></i>
@@ -56,7 +52,6 @@
                 </a>
             </section>
 
-            <!-- Log Table -->
             <section class="log-section">
                 <h2>Logs for Tracking</h2>
                 <table>
@@ -70,13 +65,29 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for log in recent_logs %}
                         <tr>
-                            <td>09-29-25</td>
-                            <td>Sprinkles</td>
-                            <td>Low</td>
-                            <td>For Restock</td>
-                            <td>Staff Jane</td>
+                            <td>{{ log.date_and_time|date:"m-d-y" }}</td> 
+                            
+                            <td>{{ log.product_name }}</td> 
+                            
+                            <td>{{ log.stock_status|default_if_none:"-" }}</td>
+                            
+                            <td>
+                                {% if log.action_taken == 'LOGIN' %}
+                                    {{ log.details }}
+                                {% else %}
+                                    {{ log.get_action_taken_display }}
+                                {% endif %}
+                            </td>
+                            
+                            <td>Staff {{ log.staff.username|default:"System"|title }}</td>
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align:center;">No recent activity logs found.</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </section>
