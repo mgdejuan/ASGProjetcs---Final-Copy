@@ -86,6 +86,33 @@ body {
     padding: 8px;
 }
 
+/* Notification icon */
+.notification-icon {
+    color: #4b3a2f;
+    font-size: 1.3rem;
+    margin-right: 10px;
+    position: relative;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.notification-icon:hover {
+    color: #d9a404;
+}
+
+/* Optional: small red dot indicator */
+.notification-icon::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    display: block;
+}
+
 /* Cards */
 .cards {
     display: flex;

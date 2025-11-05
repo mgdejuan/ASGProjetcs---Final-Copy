@@ -1,0 +1,137 @@
+/* Use Poppins for everything */
+* {
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffd6d6;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  color: #333;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none; /* Added for the <a> tag link */
+}
+
+.container {
+  background-color: #fffbea;
+  max-width: 950px;
+  margin: 20px auto;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #ff6b6b;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.form-section, .search-sort {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+label {
+  font-weight: 500;
+}
+
+input, select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #e5e0c3;
+  width: 180px;
+  font-size: 14px;
+}
+
+.add-btn {
+  background-color: #ff8787;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 15px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-btn:hover {
+  background-color: #ff6b6b;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  font-size: 14px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #ff9b9b;
+  color: #333;
+  font-weight: 600;
+}
+
+.action-btn {
+  background-color: #ff8787;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 6px 12px;
+  margin: 3px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.delete-btn {
+  background-color: #ff8787;
+}
+
+.action-btn:hover {
+  opacity: 0.9;
+}
+
+.search-sort {
+  background: #fff4f4;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.search-sort input {
+  width: 200px;
+}
+
+input.quantity-input {
+  width: 70px;
+  background-color: #fff7e6;
+  border: 1px solid #ddd;
+  text-align: center;
+}
