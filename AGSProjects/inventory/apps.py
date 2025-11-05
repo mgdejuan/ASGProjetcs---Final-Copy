@@ -7,4 +7,4 @@ class InventoryAppConfig(AppConfig):
 
     def ready(self):
         # Import signals to ensure they connect when Django starts
-        import inventory_app.signals
+        import inventory.signals
