@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from .models import LogHistory
 
 # Home page (requires login)
 @login_required
 def home(request):
-    return render(request, 'sidebar/home.html')
+    recent_logs = LogHistory.objects.all().order_by('-date_and_time')[:5]
+    return render(request, 'sidebar/home.html', {
+        'recent_logs': recent_logs
+    })
 
 # Inventory page (requires login)
 @login_required
