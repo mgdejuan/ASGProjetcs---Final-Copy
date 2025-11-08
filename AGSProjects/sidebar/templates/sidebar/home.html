@@ -176,13 +176,24 @@
         <!-- Main content -->
         <main class="main-content">
             <header class="topbar">
-                <h1>Dashboard</h1>
-                <div class="user-info">
-                    <span>{{ request.user.username|title }}</span>
-                    <i class="fa-solid fa-user"></i>
-                </div>
-            </header>
+    <h1>Dashboard</h1>
+    <div class="user-info">
+        <!-- Notification bell (clickable link) -->
+        <div class="notification-wrapper">
+            <a href="{% url 'notifications' %}" class="notification-link">
+                <i class="fa-solid fa-bell notification-bell" id="bell"></i>
+                <span class="notif-badge"></span>
+            </a>
+        </div>
 
+<<<<<<< HEAD
+=======
+        <span>{{ request.user.username|title }}</span>
+        <i class="fa-solid fa-user"></i>
+    </div>
+</header>
+
+>>>>>>> bc46aeceeb92deec45241fe7b17b42cee4e96fde
             <!-- Cards section -->
             <section class="cards">
                 <a href="{% url 'flavors' %}" class="card flavor">
