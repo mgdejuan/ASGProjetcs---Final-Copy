@@ -1,6 +1,6 @@
 /* home.css */
 
-/* Global Reset and Layout */
+/* --- Global Reset and Layout --- */
 * {
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
@@ -9,7 +9,7 @@
 }
 
 body {
-    background-color: #f7f7f5; /* Light cream/beige background */
+    background-color: #f7f7f5;
     min-height: 100vh;
 }
 
@@ -17,10 +17,10 @@ body {
     display: flex;
 }
 
-/* --- Sidebar Styling --- */
+/* --- Sidebar --- */
 .sidebar {
     width: 200px;
-    background-color: #fff8e1; /* Pale yellow background matching dashboard header */
+    background-color: #fff8e1;
     padding: 20px 0;
     min-height: 100vh;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
@@ -51,12 +51,12 @@ body {
 }
 
 .sidebar ul li a:hover {
-    background-color: #ffeeb3; /* Lighter hover color */
+    background-color: #ffeeb3;
     color: #333;
 }
 
 .sidebar .logout a {
-    color: #d9534f; /* Red for logout */
+    color: #d9534f;
     margin-top: 30px;
 }
 
@@ -92,7 +92,7 @@ body {
 }
 
 .notification-icon {
-    color: #f3b04d; /* Golden orange icon */
+    color: #f3b04d;
     font-size: 18px;
     text-decoration: none;
 }
@@ -104,7 +104,7 @@ body {
     color: #888;
 }
 
-/* --- Cards Section --- */
+/* --- Cards --- */
 .cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -139,57 +139,73 @@ body {
 .card p {
     font-size: 16px;
     font-weight: 600;
-    color: #333; /* Dark text over pale background */
+    color: #333;
 }
 
-/* Card Colors matching dashboard image */
+/* Card Colors */
 .card.flavor {
-    background-color: #f8c9d2; /* Pink */
+    background-color: #f8c9d2;
 }
 
 .card.ingredients {
-    background-color: #c9b4a9; /* Brown/Taupe */
+    background-color: #c9b4a9;
 }
 
 .card.toppings {
-    background-color: #a3e0e0; /* Aqua/Light Blue */
+    background-color: #a3e0e0;
 }
 
 .card.packaging {
-    background-color: #f5e4c9; /* Pale Orange/Cream */
+    background-color: #f5e4c9;
 }
 
-/* --- Log Table Section --- */
+/* --- Log Section (Sentence Style) --- */
+.log-section {
+    margin-top: 30px;
+}
+
 .log-section h2 {
-    font-size: 20px;
-    color: #333;
+    color: #e75480;
     margin-bottom: 15px;
-    border-bottom: 1px solid #ddd;
+    font-size: 1.4rem;
+    border-bottom: 3px solid #ffd6e0;
     padding-bottom: 5px;
 }
 
-.log-section table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
+.log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.log-entry {
+    background: #fff0f5;
+    border-left: 5px solid #e75480;
+    padding: 12px 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    line-height: 1.5;
+}
+
+.log-entry:hover {
+    background: #ffe4eb;
+    transform: translateY(-2px);
+}
+
+.log-entry i {
+    color: #e75480;
+    margin-right: 6px;
     font-size: 14px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.log-section th, .log-section td {
-    border: 1px solid #eee;
-    padding: 12px;
-    text-align: left;
-}
-
-.log-section th {
-    background-color: #ffe0a3; /* Light header color */
-    color: #333;
-    font-weight: 600;
-}
-
-.log-section tr:nth-child(even) {
-    background-color: #f9f9f9;
+.no-data {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    margin-top: 10px;
 }
