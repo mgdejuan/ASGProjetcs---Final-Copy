@@ -1,212 +1,103 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>INGREDIENT MANAGEMENTS</title>
-
-  <!-- Poppins font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    * { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
-    body { background-color: #f5f5f5; margin: 0; padding: 0; }
-
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background-color: #9A7065;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 15px;
-      color: #fff;
-      cursor: pointer;
-      margin: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .container {
-      background-color: #fff8e1;
-      max-width: 950px;
-      margin: 20px auto;
-      padding: 20px 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    h2 { text-align: center; color: #9A7065; font-weight: 700; margin-bottom: 25px; }
-
-    .form-section {
-      display: flex; justify-content: center; align-items: flex-end;
-      gap: 15px; flex-wrap: wrap; margin: 20px 0;
-    }
-
-    label { font-weight: 500; color: #5a4039; }
-
-    input {
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: none;
-      background-color: #e5e0c3;
-      font-size: 14px;
-      width: 180px;
-    }
-
-    .add-btn {
-      background-color: #9A7065;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 15px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    table { width: 100%; border-collapse: collapse; background-color: white; font-size: 14px; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-    th { background-color: #9A7065; color: white; font-weight: 600; }
-
-    .action-btn {
-      background-color: #9A7065;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      padding: 6px 12px;
-      margin: 3px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: opacity 0.2s;
-    }
-    .action-btn:hover { opacity: 0.9; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INGREDIENT MANAGEMENTS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* BASE & TYPOGRAPHY */
+        /* ---------------------------------------------------------------- */
+        * { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+        body { background-color: #f5f5f5; margin: 0; padding: 0; }
+        /* CSS FIX: Hiding the up/down arrows for number inputs (spinners) */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] { -moz-appearance: textfield; }
+        /* CONTAINER & HEADER */
+        /* ---------------------------------------------------------------- */
+        .container { background-color: #fff8e1; max-width: 950px; margin: 20px auto; padding: 20px 30px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #9A7065; font-weight: 700; margin-bottom: 25px; }
+        /* BUTTONS */
+        /* ---------------------------------------------------------------- */
+        .back-btn { display: inline-flex; align-items: center; gap: 6px; background-color: #9A7065; border: none; border-radius: 20px; padding: 8px 15px; color: #fff; cursor: pointer; margin: 20px; font-size: 14px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .add-btn { background-color: #9A7065; border: none; border-radius: 8px; padding: 8px 15px; color: white; font-weight: 600; cursor: pointer; }
+        /* FORMS & INPUTS */
+        /* ---------------------------------------------------------------- */
+        .form-section { display: flex; justify-content: center; align-items: flex-end; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
+        label { font-weight: 500; color: #5a4039; }
+        input { padding: 8px 10px; border-radius: 8px; border: none; background-color: #e5e0c3; font-size: 14px; width: 180px; }
+        /* TABLE STYLES */
+        /* ---------------------------------------------------------------- */
+        table { width: 100%; border-collapse: collapse; background-color: white; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #9A7065; color: white; font-weight: 600; }
+        /* TABLE ACTIONS */
+        /* ---------------------------------------------------------------- */
+        .action-btn { background-color: #9A7065; border: none; border-radius: 8px; color: white; padding: 6px 12px; margin: 3px; cursor: pointer; font-weight: 500; transition: opacity 0.2s; }
+        .action-btn:hover { opacity: 0.9; }
+    </style>
 </head>
 
 <body>
-
 <button class="back-btn" onclick="history.back()">← Back to Dashboard</button>
-
-  <div class="container">
+<div class="container">
     <h2>INGREDIENTS MANAGEMENTS</h2>
-
-    <div class="form-section">
-      <div>
-        <label>Ingredient name:</label><br>
-        <input type="text" id="IngredientName" placeholder="Enter ingredient name">
-      </div>
-      <div>
-        <label>Price:</label><br>
-        <input type="text" id="price" placeholder="Enter price">
-      </div>
-      <div>
-        <label>Quantity:</label><br>
-        <input type="number" id="quantity" placeholder="0" min="0">
-      </div>
-      <button class="add-btn" id="addIngredientBtn">Add Ingredient</button>
-    </div>
-
+    <form method="POST" action="{% url 'ingredients' %}" class="form-section">
+        {% csrf_token %} 
+        <div><label>Ingredient name:</label><br><input type="text" name="name" placeholder="Enter ingredient name" required></div>
+        <div><label>Price:</label><br><input type="number" name="price" step="0.01" placeholder="Enter price" required></div>
+        <div><label>Quantity:</label><br><input type="number" name="quantity" placeholder="0" min="0" required></div>
+        <button type="submit" class="add-btn">Add Ingredient</button>
+    </form>
+    
     <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Ingredient name</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="IngredientTableBody"></tbody>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ingredient name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingredient in ingredients %}
+            <tr>
+                <td>{{ ingredient.id }}</td>
+                <td>{{ ingredient.name }}</td>
+                <td>₱{{ ingredient.price }}</td>
+                <td>{{ ingredient.quantity }}</td>
+                <td>
+                    <a href="{% url 'ingredients' %}?edit={{ ingredient.id }}" class="action-btn edit-btn">Edit</a>
+                    <a href="{% url 'delete_ingredient' ingredient.id %}" class="action-btn delete-btn">Delete</a>
+                </td>
+            </tr>
+            
+            {% if request.GET.edit|safe == ingredient.id|safe %}
+            <tr style="background-color: #f0f0f0;">
+                <td colspan="5">
+                    <form method="POST" action="{% url 'update_ingredient' ingredient.id %}" class="form-section" style="padding: 10px 0; gap: 10px;">
+                        {% csrf_token %}
+                        <input type="text" name="name" value="{{ ingredient.name }}" style="width: 150px;" required>
+                        <input type="number" name="price" step="0.01" value="{{ ingredient.price }}" style="width: 120px;" required>
+                        <input type="number" name="quantity" value="{{ ingredient.quantity }}" style="width: 120px;" required>
+                        <button type="submit" class="add-btn" style="background-color: green;">Save</button>
+                        <a href="{% url 'ingredients' %}" class="save-btn" style="background-color: gray; color: white; padding: 8px; border-radius: 8px; text-decoration: none;">Cancel</a>
+                    </form>
+                </td>
+            </tr>
+            {% endif %}
+            
+            {% empty %}
+            <tr><td colspan="5">No ingredients found. Add a new ingredient above!</td></tr>
+            {% endfor %}
+        </tbody>
     </table>
-  </div>
-
-  <script>
-    const addBtn = document.getElementById('addIngredientBtn');
-    const IngredientNameInput = document.getElementById('IngredientName');
-    const priceInput = document.getElementById('price');
-    const quantityInput = document.getElementById('quantity');
-    const tableBody = document.getElementById('IngredientTableBody');
-
-    let ingredients = JSON.parse(localStorage.getItem('ingredients')) || [];
-    let idCounter = ingredients.length ? Math.max(...ingredients.map(i => i.id)) + 1 : 1;
-
-    function saveToLocalStorage() {
-      localStorage.setItem('ingredients', JSON.stringify(ingredients));
-    }
-
-    function renderTable() {
-      tableBody.innerHTML = "";
-      ingredients.forEach(ingredient => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${ingredient.id}</td>
-          <td>${ingredient.name}</td>
-          <td>${ingredient.price}</td>
-          <td><input type="number" class="quantity-input" value="${ingredient.quantity}" min="0"></td>
-          <td>
-            <button class="action-btn edit-btn">Edit</button>
-            <button class="action-btn delete-btn">Delete</button>
-          </td>
-        `;
-
-        row.querySelector('.quantity-input').addEventListener('change', e => {
-          ingredient.quantity = parseInt(e.target.value) || 0;
-          saveToLocalStorage();
-        });
-
-        row.querySelector('.delete-btn').addEventListener('click', () => {
-          ingredients = ingredients.filter(i => i.id !== ingredient.id);
-          saveToLocalStorage();
-          renderTable();
-        });
-
-        row.querySelector('.edit-btn').addEventListener('click', () => {
-          const newName = prompt("Edit ingredient name:", ingredient.name);
-          const newPrice = prompt("Edit price:", ingredient.price);
-          const newQuantity = prompt("Edit quantity:", ingredient.quantity);
-
-          if (newName !== null && newPrice !== null && newQuantity !== null) {
-            ingredient.name = newName.trim() || ingredient.name;
-            ingredient.price = newPrice.trim() || ingredient.price;
-            ingredient.quantity = parseInt(newQuantity) || ingredient.quantity;
-            saveToLocalStorage();
-            renderTable();
-          }
-        });
-
-        tableBody.appendChild(row);
-      });
-    }
-
-    function addIngredient() {
-      const name = IngredientNameInput.value.trim();
-      const price = priceInput.value.trim();
-      const quantity = parseInt(quantityInput.value) || 0;
-
-      if (!name || !price) {
-        alert("Please fill out the name and price!");
-        return;
-      }
-
-      const newIngredient = {
-        id: idCounter++,
-        name,
-        price,
-        quantity
-      };
-
-      ingredients.push(newIngredient);
-      saveToLocalStorage();
-      renderTable();
-
-      IngredientNameInput.value = "";
-      priceInput.value = "";
-      quantityInput.value = "";
-    }
-
-    addBtn.addEventListener('click', addIngredient);
-    renderTable();
-  </script>
+</div>
 </body>
 </html>

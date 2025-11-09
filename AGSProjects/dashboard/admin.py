@@ -8,12 +8,16 @@ class FlavorAdmin(admin.ModelAdmin):
     list_filter = ('is_available', 'created_at')
 
 
+from django.contrib import admin
+from .models import Flavor, Ingredient, Topping, Packaging
+# ... other classes omitted for brevity ...
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'stock', 'is_available', 'created_at')
+    # FIX APPLIED: Changed 'stock' to 'quantity'
+    list_display = ('name', 'quantity', 'is_available', 'created_at') 
     search_fields = ('name',)
     list_filter = ('is_available', 'created_at')
-
 
 @admin.register(Topping)
 class ToppingAdmin(admin.ModelAdmin):
