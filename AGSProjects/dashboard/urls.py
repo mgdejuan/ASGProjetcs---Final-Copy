@@ -2,11 +2,14 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # Dashboard
+    path('', views.dashboard, name='dashboard'),
+
     # Flavors
-    path('', views.dashboard, name='dashboard'), 
-    path('flavors/', views.flavors, name='flavors'),
-    path('flavors/update_flavor/<int:id>/', views.update_flavor, name='update_flavor'),
-    path('flavors/delete_flavor/<int:id>/', views.delete_flavor, name='delete_flavor'),
+    path('flavors/', views.flavors, name='flavors'),  # add / list
+    path('flavors/<int:id>/', views.flavors, name='update_flavor'),  # edit inline
+    path('flavors/delete/<int:delete_id>/', views.flavors, name='delete_flavor'),  # delete inline
+
 
     # Ingredients
     path('ingredients/', views.ingredients, name='ingredients'),

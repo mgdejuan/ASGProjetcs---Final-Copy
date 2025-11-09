@@ -4,136 +4,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>INGREDIENT MANAGEMENTS</title>
+  <title>Ingredients Management</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="{% static 'css/ingredients.css' %}"> 
 </head>
-
 <body>
-  <a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
 
-  <div class="container">
-    <h2>INGREDIENTS MANAGEMENTS</h2>
+<a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
 
-    <div class="form-section">
-      <div>
-        <label>Ingredient name:</label><br>
-        <input type="text" id="IngredientName" placeholder="Enter ingredient name">
+<div class="container">
+  <h2>INGREDIENTS MANAGEMENT</h2>
+
+<div class="form-section">
+  <form method="POST" action="{% url 'ingredients' %}">
+    {% csrf_token %}
+    <div style="display: flex; gap: 10px; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column;">
+        <label>Ingredient name:</label>
+        <input type="text" name="name" placeholder="Enter ingredient name" required>
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label>Quantity:</label>
+        <input type="number" name="quantity" placeholder="0" min="0" required>
       </div>
       <div>
-        <label>Price:</label><br>
-        <input type="text" id="price" placeholder="Enter price">
+        <button type="submit" class="add-btn">Add Ingredient</button>
       </div>
-      <div>
-        <label>Quantity:</label><br>
-        <input type="number" id="quantity" placeholder="0" min="0">
-      </div>
-      <button class="add-btn" id="addIngredientBtn">Add Ingredient</button>
     </div>
+  </form>
+</div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Ingredient name</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="IngredientTableBody"></tbody>
-    </table>
-  </div>
 
-  <script>
-    const addBtn = document.getElementById('addIngredientBtn');
-    const IngredientNameInput = document.getElementById('IngredientName');
-    const priceInput = document.getElementById('price');
-    const quantityInput = document.getElementById('quantity');
-    const tableBody = document.getElementById('IngredientTableBody');
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      {% for ingredient in ingredients %}
+      <tr data-id="{{ ingredient.id }}">
+        <td>{{ ingredient.id }}</td>
+        <td>{{ ingredient.name }}</td>
+        <td>{{ ingredient.quantity }}</td>
+        <td>
+          <a href="{% url 'update_ingredient' ingredient.id %}" class="action-btn edit-btn">Edit</a>
+          <a href="{% url 'delete_ingredient' ingredient.id %}" class="action-btn delete-btn">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No ingredients found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-    let ingredients = JSON.parse(localStorage.getItem('ingredients')) || [];
-    let idCounter = ingredients.length ? Math.max(...ingredients.map(i => i.id)) + 1 : 1;
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const sortSelect = document.getElementById('sortSelect');
+  const tableBody = document.getElementById('tableBody');
 
-    function saveToLocalStorage() {
-      localStorage.setItem('ingredients', JSON.stringify(ingredients));
-    }
+  function renderTable() {
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    const searchTerm = searchInput.value.toLowerCase();
 
-    function renderTable() {
-      tableBody.innerHTML = "";
-      ingredients.forEach(ingredient => {
-        const row = document.createElement('tr');
-        // Using an inline input for quantity for simple local storage management
-        row.innerHTML = `
-          <td>${ingredient.id}</td>
-          <td>${ingredient.name}</td>
-          <td>${ingredient.price}</td>
-          <td><input type="number" class="quantity-input" value="${ingredient.quantity}" min="0"></td>
-          <td>
-            <button class="action-btn edit-btn">Edit</button>
-            <button class="action-btn delete-btn">Delete</button>
-          </td>
-        `;
+    rows.forEach(row => {
+      const name = row.children[1].textContent.toLowerCase();
+      const quantity = row.children[2].textContent.toLowerCase();
+      row.style.display = (name.includes(searchTerm) || quantity.includes(searchTerm)) ? '' : 'none';
+    });
 
-        row.querySelector('.quantity-input').addEventListener('change', e => {
-          ingredient.quantity = parseInt(e.target.value) || 0;
-          saveToLocalStorage();
-        });
+    const sortValue = sortSelect.value;
+    if (!sortValue) return;
 
-        row.querySelector('.delete-btn').addEventListener('click', () => {
-          ingredients = ingredients.filter(i => i.id !== ingredient.id);
-          saveToLocalStorage();
-          renderTable();
-        });
+    rows.sort((a, b) => {
+      const nameA = a.children[1].textContent.toLowerCase();
+      const nameB = b.children[1].textContent.toLowerCase();
+      const quantityA = parseInt(a.children[2].textContent);
+      const quantityB = parseInt(b.children[2].textContent);
 
-        row.querySelector('.edit-btn').addEventListener('click', () => {
-          const newName = prompt("Edit ingredient name:", ingredient.name);
-          const newPrice = prompt("Edit price:", ingredient.price);
-          const newQuantity = prompt("Edit quantity:", ingredient.quantity);
-
-          if (newName !== null && newPrice !== null && newQuantity !== null) {
-            ingredient.name = newName.trim() || ingredient.name;
-            ingredient.price = newPrice.trim() || ingredient.price;
-            ingredient.quantity = parseInt(newQuantity) || ingredient.quantity;
-            saveToLocalStorage();
-            renderTable();
-          }
-        });
-
-        tableBody.appendChild(row);
-      });
-    }
-
-    function addIngredient() {
-      const name = IngredientNameInput.value.trim();
-      const price = priceInput.value.trim();
-      const quantity = parseInt(quantityInput.value) || 0;
-
-      if (!name || !price) {
-        alert("Please fill out the name and price!");
-        return;
+      switch(sortValue) {
+        case 'nameAsc': return nameA.localeCompare(nameB);
+        case 'nameDesc': return nameB.localeCompare(nameA);
+        case 'quantityAsc': return quantityA - quantityB;
+        case 'quantityDesc': return quantityB - quantityA;
       }
+    });
 
-      const newIngredient = {
-        id: idCounter++,
-        name,
-        price,
-        quantity
-      };
+    rows.forEach(row => tableBody.appendChild(row));
+  }
 
-      ingredients.push(newIngredient);
-      saveToLocalStorage();
-      renderTable();
+  searchInput.addEventListener('input', renderTable);
+  sortSelect.addEventListener('change', renderTable);
+</script>
 
-      IngredientNameInput.value = "";
-      priceInput.value = "";
-      quantityInput.value = "";
-    }
-
-    addBtn.addEventListener('click', addIngredient);
-    renderTable();
-  </script>
 </body>
 </html>

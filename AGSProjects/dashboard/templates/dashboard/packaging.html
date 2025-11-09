@@ -2,141 +2,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACKAGING MANAGEMENTS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Packaging Management</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="{% static 'css/packaging.css' %}">
+  <link rel="stylesheet" href="{% static 'css/packaging.css' %}"> 
 </head>
-
 <body>
-  <a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
 
-  <div class="container">
-    <h2>PACKAGING MANAGEMENTS</h2>
+<a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
 
-    <div class="form-section">
-      <div>
-        <label>Packaging name:</label><br>
-        <input type="text" id="PackagingName" placeholder="Enter packaging name">
+<div class="container">
+  <h2>PACKAGING MANAGEMENT</h2>
+
+ <div class="form-section">
+  <form method="POST" action="{% url 'packaging' %}">
+    {% csrf_token %}
+    <div style="display: flex; gap: 10px; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column;">
+        <label>Packaging type:</label>
+        <input type="text" name="type" placeholder="Enter packaging type" required>
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label>Cost:</label>
+        <input type="text" name="cost" placeholder="Enter cost" required>
       </div>
       <div>
-        <label>Quantity:</label><br>
-        <input type="number" id="quantity" placeholder="0" min="0">
+        <button type="submit" class="add-btn">Add Packaging</button>
       </div>
-      <div>
-        <label>Price:</label><br>
-        <input type="text" id="price" placeholder="Enter price">
-      </div>
-      <button class="add-btn" id="addPackagingBtn">Add Packaging</button>
     </div>
+  </form>
+</div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID:</th>
-          <th>Packaging name:</th>
-          <th>Price:</th>
-          <th>Quantity:</th>
-          <th>Actions:</th>
-        </tr>
-      </thead>
-      <tbody id="PackagingTableBody">
-        </tbody>
-    </table>
-  </div>
 
-  <script>
-    const addBtn = document.getElementById('addPackagingBtn');
-    const PackagingNameInput = document.getElementById('PackagingName');
-    const priceInput = document.getElementById('price');
-    const quantityInput = document.getElementById('quantity');
-    const tableBody = document.getElementById('PackagingTableBody');
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Cost</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      {% for pack in packaging_list %}
+      <tr data-id="{{ pack.id }}">
+        <td>{{ pack.id }}</td>
+        <td>{{ pack.type }}</td>
+        <td>{{ pack.cost }}</td>
+        <td>
+          <a href="{% url 'update_packaging' pack.id %}" class="action-btn edit-btn">Edit</a>
+          <a href="{% url 'delete_packaging' pack.id %}" class="action-btn delete-btn">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No packaging found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-    let Packaging = JSON.parse(localStorage.getItem('Packaging')) || [];
-    let idCounter = Packaging.length ? Math.max(...Packaging.map(t => t.id)) + 1 : 1;
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const sortSelect = document.getElementById('sortSelect');
+  const tableBody = document.getElementById('tableBody');
 
-    function saveToLocalStorage() {
-      localStorage.setItem('Packaging', JSON.stringify(Packaging));
-    }
+  function renderTable() {
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    const searchTerm = searchInput.value.toLowerCase();
 
-    function renderTable() {
-      tableBody.innerHTML = "";
-      Packaging.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${item.id}</td>
-          <td>${item.name}</td>
-          <td>${item.price}</td>
-          <td><input type="number" class="quantity-input" value="${item.quantity}" min="0"></td>
-          <td>
-            <button class="action-btn edit-btn">Edit</button>
-            <button class="action-btn delete-btn">Delete</button>
-          </td>
-        `;
+    rows.forEach(row => {
+      const type = row.children[1].textContent.toLowerCase();
+      const cost = row.children[2].textContent.toLowerCase();
+      row.style.display = (type.includes(searchTerm) || cost.includes(searchTerm)) ? '' : 'none';
+    });
 
-        // Quantity update
-        row.querySelector('.quantity-input').addEventListener('change', e => {
-          item.quantity = parseInt(e.target.value) || 0;
-          saveToLocalStorage();
-        });
+    const sortValue = sortSelect.value;
+    if (!sortValue) return;
 
-        // Delete
-        row.querySelector('.delete-btn').addEventListener('click', () => {
-          Packaging = Packaging.filter(p => p.id !== item.id);
-          saveToLocalStorage();
-          renderTable();
-        });
-
-        // Edit
-        row.querySelector('.edit-btn').addEventListener('click', () => {
-          const newName = prompt("Edit packaging name:", item.name);
-          const newPrice = prompt("Edit price:", item.price);
-          const newQuantity = prompt("Edit quantity:", item.quantity);
-
-          if (newName !== null && newPrice !== null && newQuantity !== null) {
-            item.name = newName.trim() || item.name;
-            item.price = newPrice.trim() || item.price;
-            item.quantity = parseInt(newQuantity) || item.quantity;
-            saveToLocalStorage();
-            renderTable();
-          }
-        });
-
-        tableBody.appendChild(row);
-      });
-    }
-
-    function addPackaging() {
-      const name = PackagingNameInput.value.trim();
-      const price = priceInput.value.trim();
-      const quantity = parseInt(quantityInput.value) || 0;
-
-      if (!name || !price) {
-        alert("Please fill out the name and price!");
-        return;
-      }
-
-      const newPackaging = {
-        id: idCounter++,
-        name,
-        price,
-        quantity
-      };
-
-      Packaging.push(newPackaging);
-      saveToLocalStorage();
-      renderTable();
-
-      PackagingNameInput.value = "";
-      priceInput.value = "";
-      quantityInput.value = "";
-    }
-
-    addBtn.addEventListener('click', addPackaging);
-    renderTable();
-  </script>
-</body>
-</html>
+    rows.sort((a, b) => {
+      const typeA = a.

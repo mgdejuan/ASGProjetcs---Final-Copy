@@ -6,164 +6,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flavors Management</title>
 
+  <!-- Google Fonts: Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="{% static 'css/flavors.css' %}"> 
-  
+
+  <link rel="stylesheet" href="{% static 'css/flavors.css' %}">
 </head>
-<body>
+<body style="font-family: 'Poppins', sans-serif;">
 
-  <a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
+<a href="{% url 'dashboard' %}" class="back-btn">← Back to Dashboard</a>
 
-  <div class="container">
-    <h2>FLAVORS MANAGEMENTS</h2>
+<div class="container">
 
-    <div class="form-section">
-      <div>
-        <label>Flavor name:</label><br>
-        <input type="text" id="flavorName" placeholder="Enter flavor name">
+  <!-- Add / Edit Flavor Form -->
+  <div class="flavor-form" style="text-align:center; margin-bottom: 20px;">
+    {% if flavor_to_edit %}
+      <h2>Edit Flavor</h2>
+    {% else %}
+      <h2>Add New Flavor</h2>
+    {% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      <div style="display:flex; justify-content:center; gap:10px; align-items:flex-end;">
+        <div>
+          <label>Flavor Name:</label><br>
+          <input type="text" name="name" value="{{ flavor_to_edit.name|default_if_none:'' }}" required>
+        </div>
+        <div>
+          <label>Price:</label><br>
+          <input type="text" name="price" value="{{ flavor_to_edit.price|default_if_none:'' }}" required>
+        </div>
+        <div>
+          <label>Quantity:</label><br>
+          <input type="number" name="quantity" value="{{ flavor_to_edit.quantity|default_if_none:0 }}" min="0" required>
+        </div>
+        <div>
+          <button type="submit" style="height:38px;">
+            {% if flavor_to_edit %}Update{% else %}Add{% endif %}
+          </button>
+        </div>
       </div>
-      <div>
-        <label>Price:</label><br>
-        <input type="text" id="price" placeholder="Enter price">
-      </div>
-      <div>
-        <label>Quantity:</label><br>
-        <input type="number" id="quantity" placeholder="0" min="0">
-      </div>
-      <button class="add-btn" id="addFlavorBtn">Add flavor</button>
-    </div>
+    </form>
+  </div>
 
-    <div class="search-sort">
-      <input type="text" id="searchInput" placeholder="Search by name or price">
-      <select id="sortSelect">
-        <option value="">Sort by...</option>
-        <option value="nameAsc">Name (A–Z)</option>
-        <option value="nameDesc">Name (Z–A)</option>
-        <option value="priceAsc">Price (Low–High)</option>
-        <option value="priceDesc">Price (High–Low)</option>
-      </select>
-    </div>
-
-    <table>
+  <!-- Flavors Table -->
+  <div class="flavors-list">
+    <h2>All Flavors</h2>
+    <table style="margin:auto;">
       <thead>
         <tr>
-          <th>ID:</th>
-          <th>Flavor name:</th>
-          <th>Price:</th>
-          <th>Quantity:</th>
-          <th>Actions:</th>
+          <th>ID</th>
+          <th>Flavor Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="flavorTableBody">
-        </tbody>
+        {% for f in flavors %}
+        <tr>
+          <td>{{ f.id }}</td>
+          <td>{{ f.name }}</td>
+          <td>{{ f.price }}</td>
+          <td>{{ f.quantity }}</td>
+          <td>
+            <a href="{% url 'update_flavor' f.id %}">Edit</a>
+            <a href="{% url 'delete_flavor' f.id %}">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 
-  <script>
-    const addBtn = document.getElementById('addFlavorBtn');
-    const flavorNameInput = document.getElementById('flavorName');
-    const priceInput = document.getElementById('price');
-    const quantityInput = document.getElementById('quantity');
-    const tableBody = document.getElementById('flavorTableBody');
-    const searchInput = document.getElementById('searchInput');
-    const sortSelect = document.getElementById('sortSelect');
-
-    let flavors = JSON.parse(localStorage.getItem('flavors')) || [];
-    let idCounter = flavors.length ? Math.max(...flavors.map(f => f.id)) + 1 : 1;
-
-    function saveToLocalStorage() {
-      localStorage.setItem('flavors', JSON.stringify(flavors));
-    }
-
-    function renderTable() {
-      tableBody.innerHTML = "";
-      const searchTerm = searchInput.value.toLowerCase();
-
-      let displayedFlavors = flavors.filter(f =>
-        f.name.toLowerCase().includes(searchTerm) ||
-        f.price.toLowerCase().includes(searchTerm)
-      );
-
-      const sortValue = sortSelect.value;
-      if (sortValue === "nameAsc") displayedFlavors.sort((a, b) => a.name.localeCompare(b.name));
-      if (sortValue === "nameDesc") displayedFlavors.sort((a, b) => b.name.localeCompare(a.name));
-      if (sortValue === "priceAsc") displayedFlavors.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-      if (sortValue === "priceDesc") displayedFlavors.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-
-      displayedFlavors.forEach(flavor => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${flavor.id}</td>
-          <td>${flavor.name}</td>
-          <td>${flavor.price}</td>
-          <td><input type="number" class="quantity-input" value="${flavor.quantity}" min="0"></td>
-          <td>
-            <button class="action-btn edit-btn">Edit</button>
-            <button class="action-btn delete-btn">Delete</button>
-          </td>
-        `;
-
-        row.querySelector('.quantity-input').addEventListener('change', (e) => {
-          flavor.quantity = parseInt(e.target.value) || 0;
-          saveToLocalStorage();
-        });
-
-        row.querySelector('.delete-btn').addEventListener('click', () => {
-          flavors = flavors.filter(f => f.id !== flavor.id);
-          saveToLocalStorage();
-          renderTable();
-        });
-
-        row.querySelector('.edit-btn').addEventListener('click', () => {
-          const newName = prompt("Edit flavor name:", flavor.name);
-          const newPrice = prompt("Edit price:", flavor.price);
-          const newQuantity = prompt("Edit quantity:", flavor.quantity);
-
-          if (newName !== null && newPrice !== null && newQuantity !== null) {
-            flavor.name = newName.trim() || flavor.name;
-            flavor.price = newPrice.trim() || flavor.price;
-            flavor.quantity = parseInt(newQuantity) || flavor.quantity;
-            saveToLocalStorage();
-            renderTable();
-          }
-        });
-
-        tableBody.appendChild(row);
-      });
-    }
-
-    function addFlavor() {
-      const name = flavorNameInput.value.trim();
-      const price = priceInput.value.trim();
-      const quantity = parseInt(quantityInput.value) || 0;
-
-      if (!name || !price) {
-        alert("Please fill out the name and price!");
-        return;
-      }
-
-      const newFlavor = {
-        id: idCounter++,
-        name,
-        price,
-        quantity
-      };
-
-      flavors.push(newFlavor);
-      saveToLocalStorage();
-      renderTable();
-
-      flavorNameInput.value = "";
-      priceInput.value = "";
-      quantityInput.value = "";
-    }
-
-    addBtn.addEventListener('click', addFlavor);
-    searchInput.addEventListener('input', renderTable);
-    sortSelect.addEventListener('change', renderTable);
-
-    renderTable();
-  </script>
+</div>
 </body>
 </html>

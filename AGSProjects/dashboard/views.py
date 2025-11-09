@@ -6,34 +6,49 @@ def dashboard(request):
     return render(request, 'dashboard/home.html')
 
 
-# ----- FLAVORS CRUD -----
-def flavors(request):
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Flavor
+
+# Combined view for listing, adding, and updating flavors
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Flavor
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Flavor
+
+def flavors(request, id=None, delete_id=None):
+    # Delete flavor if delete_id is provided
+    if delete_id:
+        flavor_to_delete = get_object_or_404(Flavor, id=delete_id)
+        flavor_to_delete.delete()
+        return redirect('flavors')
+
+    # Add or Update flavor
     if request.method == 'POST':
         name = request.POST.get('name')
         price = request.POST.get('price')
+        quantity = request.POST.get('quantity')
 
-        if name and price:  # prevent empty form submission
-            Flavor.objects.create(name=name, price=price)
+        if id:  # Update existing
+            flavor = get_object_or_404(Flavor, id=id)
+            flavor.name = name
+            flavor.price = price
+            flavor.quantity = quantity
+            flavor.save()
+        else:  # Add new
+            if name and price and quantity is not None:
+                Flavor.objects.create(name=name, price=price, quantity=quantity)
+
         return redirect('flavors')
 
+    # For GET request
     flavors = Flavor.objects.all()
-    return render(request, 'dashboard/flavors.html', {'flavors': flavors})
+    flavor_to_edit = get_object_or_404(Flavor, id=id) if id else None
 
-
-def update_flavor(request, id):
-    flavor = get_object_or_404(Flavor, id=id)
-    if request.method == 'POST':
-        flavor.name = request.POST.get('name')
-        flavor.price = request.POST.get('price')
-        flavor.save()
-        return redirect('flavors')
-    return render(request, 'dashboard/update_flavor.html', {'flavor': flavor})
-
-
-def delete_flavor(request, id):
-    flavor = get_object_or_404(Flavor, id=id)
-    flavor.delete()
-    return redirect('flavors')
+    return render(request, 'dashboard/flavors.html', {
+        'flavors': flavors,
+        'flavor_to_edit': flavor_to_edit
+    })
 
 
 # ----- INGREDIENTS CRUD -----

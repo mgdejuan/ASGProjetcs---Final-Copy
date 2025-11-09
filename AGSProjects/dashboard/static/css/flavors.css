@@ -135,3 +135,10 @@ input.quantity-input {
   border: 1px solid #ddd;
   text-align: center;
 }
+/* Remove spinner arrows from quantity input */
+input.quantity-input {
+    -moz-appearance: textfield;      /* Firefox */
+    -webkit-appearance: none;         /* Chrome, Safari, Edge, Opera */
+    appearance: none;                 /* Standard */
+    margin: 0;
+}
