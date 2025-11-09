@@ -18,8 +18,6 @@
         .form-section, .search-sort { display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
         label { font-weight: 500; }
         input, select { padding: 8px 10px; border-radius: 8px; border: none; background-color: #e5e0c3; width: 180px; font-size: 14px; }
-        .search-sort { background: #fff4f4; padding: 10px 20px; border-radius: 8px; }
-        .search-sort input { width: 200px; }
         table { width: 100%; border-collapse: collapse; background-color: white; font-size: 14px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
         th { background-color: #ff9b9b; color: #333; font-weight: 600; }
@@ -34,13 +32,12 @@
 <button class="back-btn" onclick="history.back()">← Back to Dashboard</button>
 
 <div class="container">
-    <h2>FLAVORS MANAGEMENTS</h2>
+    <h2>FLAVORS MANAGEMENT</h2>
 
     <form method="POST" action="{% url 'flavors' %}" class="form-section">
         {% csrf_token %} 
         <div><label>Flavor name:</label><br><input type="text" name="name" placeholder="Enter flavor name" required></div>
-        <div><label>Price:</label><br><input type="number" name="price" step="0.01" placeholder="Enter price" required></div>
-        
+        <div><label>Price (₱):</label><br><input type="number" name="price" step="0.01" placeholder="Enter price" required></div>
         <div><label>Stock:</label><br><input type="number" name="stock" placeholder="Enter stock" required></div>
         <button type="submit" class="add-btn">Add flavor</button>
     </form>
@@ -51,7 +48,8 @@
                 <th>ID:</th>
                 <th>Flavor name:</th>
                 <th>Price:</th>
-                <th>Stock:</th> <th>Actions:</th>
+                <th>Stock:</th>
+                <th>Actions:</th>
             </tr>
         </thead>
         <tbody>
@@ -59,8 +57,9 @@
             <tr>
                 <td>{{ flavor.id }}</td>
                 <td>{{ flavor.name }}</td>
-                <td>${{ flavor.price }}</td>
-                <td>{{ flavor.stock }}</td> <td>
+                <td>₱{{ flavor.price|floatformat:2 }}</td>
+                <td>{{ flavor.stock }}</td>
+                <td>
                     <a href="{% url 'update_flavor' flavor.id %}" class="action-btn edit-btn">Edit</a>
                     <a href="{% url 'delete_flavor' flavor.id %}" class="action-btn delete-btn">Delete</a>
                 </td>
