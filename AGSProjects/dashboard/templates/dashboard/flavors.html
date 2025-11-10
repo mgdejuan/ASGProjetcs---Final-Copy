@@ -7,7 +7,7 @@
   <title>Flavors Management</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/flavors.css' %}"> 
+  <link rel="stylesheet" href="{% static 'css/flavors.css' %}">
 </head>
 <body>
 
@@ -18,7 +18,7 @@
 
   <!-- Add / Update Flavor Form -->
   <div class="form-section">
-    <form method="POST" action="{% url 'flavors' %}">
+    <form method="POST" action="{% if flavor_to_edit %}{% url 'update_flavor' flavor_to_edit.id %}{% else %}{% url 'flavors' %}{% endif %}">
       {% csrf_token %}
       <div style="display: flex; gap: 10px; align-items: flex-end;">
         <div style="display: flex; flex-direction: column;">
