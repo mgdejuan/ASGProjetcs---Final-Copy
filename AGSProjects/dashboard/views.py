@@ -51,28 +51,47 @@ def flavors(request, id=None, delete_id=None):
     })
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Ingredient
+
+#from django.shortcuts import render, redirect, get_object_or_404
+from .models import Ingredient
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Ingredient
+
 # ----- INGREDIENTS CRUD -----
-def ingredients(request):
+def ingredients(request, ingredient_id=None):
+    ingredient_to_edit = None
+
+    # If editing
+    if ingredient_id:
+        ingredient_to_edit = get_object_or_404(Ingredient, id=ingredient_id)
+
     if request.method == 'POST':
         name = request.POST.get('name')
         quantity = request.POST.get('quantity')
 
-        if name and quantity:
-            Ingredient.objects.create(name=name, quantity=quantity)
+        if ingredient_to_edit:
+            # Update existing ingredient
+            ingredient_to_edit.name = name
+            ingredient_to_edit.quantity = quantity
+            ingredient_to_edit.save()
+        else:
+            # Add new ingredient
+            if name and quantity:
+                Ingredient.objects.create(name=name, quantity=quantity)
+
         return redirect('ingredients')
 
-    ingredients = Ingredient.objects.all()
-    return render(request, 'dashboard/ingredients.html', {'ingredients': ingredients})
+    ingredients_list = Ingredient.objects.all()
 
+    context = {
+        'ingredients': ingredients_list,
+        'ingredient_to_edit': ingredient_to_edit
+    }
 
-def update_ingredient(request, id):
-    ingredient = get_object_or_404(Ingredient, id=id)
-    if request.method == 'POST':
-        ingredient.name = request.POST.get('name')
-        ingredient.quantity = request.POST.get('quantity')
-        ingredient.save()
-        return redirect('ingredients')
-    return render(request, 'dashboard/update_ingredient.html', {'ingredient': ingredient})
+    return render(request, 'dashboard/ingredients.html', context)
 
 
 def delete_ingredient(request, id):
@@ -82,27 +101,41 @@ def delete_ingredient(request, id):
 
 
 # ----- TOPPINGS CRUD -----
-def toppings(request):
+def toppings(request, topping_id=None):
+    topping_to_edit = None
+
+    # If editing
+    if topping_id:
+        topping_to_edit = get_object_or_404(Topping, id=topping_id)
+
     if request.method == 'POST':
         name = request.POST.get('name')
         price = request.POST.get('price')
+        stock = request.POST.get('stock')
 
-        if name and price:
-            Topping.objects.create(name=name, price=price)
+        if topping_to_edit:
+            # Update existing topping
+            topping_to_edit.name = name
+            topping_to_edit.price = price
+            topping_to_edit.stock = stock
+            topping_to_edit.save()
+        else:
+            # Add new topping
+            if name and price and stock:
+                Topping.objects.create(
+                    name=name,
+                    price=price,
+                    stock=stock
+                )
+
         return redirect('toppings')
 
-    toppings = Topping.objects.all()
-    return render(request, 'dashboard/toppings.html', {'toppings': toppings})
-
-
-def update_topping(request, id):
-    topping = get_object_or_404(Topping, id=id)
-    if request.method == 'POST':
-        topping.name = request.POST.get('name')
-        topping.price = request.POST.get('price')
-        topping.save()
-        return redirect('toppings')
-    return render(request, 'dashboard/update_topping.html', {'topping': topping})
+    all_toppings = Topping.objects.all()
+    context = {
+        'toppings': all_toppings,
+        'topping_to_edit': topping_to_edit
+    }
+    return render(request, 'dashboard/toppings.html', context)
 
 
 def delete_topping(request, id):
@@ -111,14 +144,33 @@ def delete_topping(request, id):
     return redirect('toppings')
 
 
-# ----- PACKAGING CRUD -----
+
+def delete_topping(request, id):
+    topping = get_object_or_404(Topping, id=id)
+    topping.delete()
+    return redirect('toppings')
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Packaging
+
+# ----------------- PACKAGING CRUD -----------------
+
 def packaging(request):
+    """
+    Display packaging list and handle adding new packaging.
+    """
     if request.method == 'POST':
         type = request.POST.get('type')
         cost = request.POST.get('cost')
+        quantity = request.POST.get('quantity')
 
-        if type and cost:
-            Packaging.objects.create(type=type, cost=cost)
+        if type and cost and quantity is not None:
+            Packaging.objects.create(
+                type=type,
+                cost=cost,
+                quantity=int(quantity)
+            )
         return redirect('packaging')
 
     packaging_list = Packaging.objects.all()
@@ -126,16 +178,30 @@ def packaging(request):
 
 
 def update_packaging(request, id):
-    packaging = get_object_or_404(Packaging, id=id)
+    """
+    Edit an existing packaging item.
+    """
+    pack = get_object_or_404(Packaging, id=id)
+
     if request.method == 'POST':
-        packaging.type = request.POST.get('type')
-        packaging.cost = request.POST.get('cost')
-        packaging.save()
+        pack.type = request.POST.get('type')
+        pack.cost = request.POST.get('cost')
+        pack.quantity = int(request.POST.get('quantity'))
+        pack.save()
         return redirect('packaging')
-    return render(request, 'dashboard/update_packaging.html', {'packaging': packaging})
+
+    # Pass both the item to edit and the full list to reuse the template
+    packaging_list = Packaging.objects.all()
+    return render(request, 'dashboard/packaging.html', {
+        'packaging_to_edit': pack,
+        'packaging_list': packaging_list
+    })
 
 
 def delete_packaging(request, id):
-    packaging = get_object_or_404(Packaging, id=id)
-    packaging.delete()
+    """
+    Delete a packaging item.
+    """
+    pack = get_object_or_404(Packaging, id=id)
+    pack.delete()
     return redirect('packaging')
