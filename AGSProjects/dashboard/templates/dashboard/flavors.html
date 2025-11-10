@@ -6,41 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flavors Management</title>
 
-  <!-- Google Fonts: Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="{% static 'css/flavors.css' %}">
+  <link rel="stylesheet" href="{% static 'css/flavors.css' %}"> 
 </head>
-<body style="font-family: 'Poppins', sans-serif;">
+<body>
 
-<a href="{% url 'dashboard' %}" class="back-btn">← Back to Dashboard</a>
+<a href="{% url 'home' %}" class="back-btn">← Back to Dashboard</a>
 
 <div class="container">
+  <h2>FLAVORS MANAGEMENT</h2>
 
-  <!-- Add / Edit Flavor Form -->
-  <div class="flavor-form" style="text-align:center; margin-bottom: 20px;">
-    {% if flavor_to_edit %}
-      <h2>Edit Flavor</h2>
-    {% else %}
-      <h2>Add New Flavor</h2>
-    {% endif %}
-    <form method="POST">
+  <!-- Add / Update Flavor Form -->
+  <div class="form-section">
+    <form method="POST" action="{% url 'flavors' %}">
       {% csrf_token %}
-      <div style="display:flex; justify-content:center; gap:10px; align-items:flex-end;">
-        <div>
-          <label>Flavor Name:</label><br>
-          <input type="text" name="name" value="{{ flavor_to_edit.name|default_if_none:'' }}" required>
+      <div style="display: flex; gap: 10px; align-items: flex-end;">
+        <div style="display: flex; flex-direction: column;">
+          <label>Flavor Name:</label>
+          <input type="text" name="name" placeholder="Enter flavor name" value="{{ flavor_to_edit.name|default_if_none:'' }}" required>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <label>Price:</label>
+          <input type="text" name="price" placeholder="Enter price" value="{{ flavor_to_edit.price|default_if_none:'' }}" required>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <label>Quantity:</label>
+          <input type="number" name="quantity" placeholder="Enter quantity" value="{{ flavor_to_edit.quantity|default_if_none:0 }}" min="0" required>
         </div>
         <div>
-          <label>Price:</label><br>
-          <input type="text" name="price" value="{{ flavor_to_edit.price|default_if_none:'' }}" required>
-        </div>
-        <div>
-          <label>Quantity:</label><br>
-          <input type="number" name="quantity" value="{{ flavor_to_edit.quantity|default_if_none:0 }}" min="0" required>
-        </div>
-        <div>
-          <button type="submit" style="height:38px;">
+          <button type="submit" class="add-btn">
             {% if flavor_to_edit %}Update{% else %}Add{% endif %}
           </button>
         </div>
@@ -49,35 +43,34 @@
   </div>
 
   <!-- Flavors Table -->
-  <div class="flavors-list">
-    <h2>All Flavors</h2>
-    <table style="margin:auto;">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Flavor Name</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="flavorTableBody">
-        {% for f in flavors %}
-        <tr>
-          <td>{{ f.id }}</td>
-          <td>{{ f.name }}</td>
-          <td>{{ f.price }}</td>
-          <td>{{ f.quantity }}</td>
-          <td>
-            <a href="{% url 'update_flavor' f.id %}">Edit</a>
-            <a href="{% url 'delete_flavor' f.id %}">Delete</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Flavor Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in flavors %}
+      <tr>
+        <td>{{ f.id }}</td>
+        <td>{{ f.name }}</td>
+        <td>{{ f.price }}</td>
+        <td>{{ f.quantity }}</td>
+        <td>
+          <a href="{% url 'update_flavor' f.id %}" class="action-btn edit-btn">Edit</a>
+          <a href="{% url 'delete_flavor' f.id %}" class="action-btn delete-btn">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">No flavors found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
+
 </body>
 </html>

@@ -32,9 +32,11 @@
             <header class="topbar">
                 <h1>Dashboard</h1>
                 <div class="user-info">
-                    <a href="{% url 'notifications' %}" class="notification-icon" title="View Notifications">
-                        <i class="fa-solid fa-bell"></i>
-                    </a>
+                   <a href="{% url 'notifications' %}" class="notification-icon" title="View Notifications">
+    <i class="fa-solid fa-bell"></i>
+    <span class="badge">{{ unread_notifications }}</span>
+</a>
+
                     <span>{{ request.user.username|default:"Admin"|title }}</span>
                     <i class="fa-solid fa-user"></i>
                 </div>

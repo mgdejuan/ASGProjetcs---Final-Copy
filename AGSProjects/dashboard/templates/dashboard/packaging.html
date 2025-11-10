@@ -16,32 +16,41 @@
 <div class="container">
   <h2>PACKAGING MANAGEMENT</h2>
 
- <div class="form-section">
-  <form method="POST" action="{% url 'packaging' %}">
-    {% csrf_token %}
-    <div style="display: flex; gap: 10px; align-items: flex-end;">
-      <div style="display: flex; flex-direction: column;">
-        <label>Packaging type:</label>
-        <input type="text" name="type" placeholder="Enter packaging type" required>
+  <!-- Add/Edit Form -->
+  <div class="form-section">
+    <form method="POST">
+      {% csrf_token %}
+      <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column;">
+          <label>Packaging Type:</label>
+          <input type="text" name="type" value="{{ packaging_to_edit.type|default_if_none:'' }}" placeholder="Enter packaging type" required>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <label>Cost:</label>
+          <input type="text" name="cost" value="{{ packaging_to_edit.cost|default_if_none:'' }}" placeholder="Enter cost" required>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <label>Quantity:</label>
+          <input type="number" name="quantity" value="{{ packaging_to_edit.quantity|default_if_none:0 }}" min="0" required>
+        </div>
+        <!-- Add/Update button inline -->
+        <div>
+          <button type="submit" class="add-btn">
+            {% if packaging_to_edit %}Update{% else %}Add Packaging{% endif %}
+          </button>
+        </div>
       </div>
-      <div style="display: flex; flex-direction: column;">
-        <label>Cost:</label>
-        <input type="text" name="cost" placeholder="Enter cost" required>
-      </div>
-      <div>
-        <button type="submit" class="add-btn">Add Packaging</button>
-      </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
 
-
+  <!-- Packaging Table -->
   <table>
     <thead>
       <tr>
         <th>ID</th>
         <th>Type</th>
         <th>Cost</th>
+        <th>Quantity</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -51,35 +60,18 @@
         <td>{{ pack.id }}</td>
         <td>{{ pack.type }}</td>
         <td>{{ pack.cost }}</td>
+        <td>{{ pack.quantity }}</td>
         <td>
           <a href="{% url 'update_packaging' pack.id %}" class="action-btn edit-btn">Edit</a>
           <a href="{% url 'delete_packaging' pack.id %}" class="action-btn delete-btn">Delete</a>
         </td>
       </tr>
       {% empty %}
-      <tr><td colspan="4">No packaging found.</td></tr>
+      <tr><td colspan="5">No packaging found.</td></tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 
-<script>
-  const searchInput = document.getElementById('searchInput');
-  const sortSelect = document.getElementById('sortSelect');
-  const tableBody = document.getElementById('tableBody');
-
-  function renderTable() {
-    const rows = Array.from(tableBody.querySelectorAll('tr'));
-    const searchTerm = searchInput.value.toLowerCase();
-
-    rows.forEach(row => {
-      const type = row.children[1].textContent.toLowerCase();
-      const cost = row.children[2].textContent.toLowerCase();
-      row.style.display = (type.includes(searchTerm) || cost.includes(searchTerm)) ? '' : 'none';
-    });
-
-    const sortValue = sortSelect.value;
-    if (!sortValue) return;
-
-    rows.sort((a, b) => {
-      const typeA = a.
+</body>
+</html>

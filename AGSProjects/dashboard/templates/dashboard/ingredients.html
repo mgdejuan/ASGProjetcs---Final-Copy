@@ -5,9 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ingredients Management</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/ingredients.css' %}"> 
+  <link rel="stylesheet" href="{% static 'css/ingredients.css' %}">
 </head>
 <body>
 
@@ -16,26 +15,30 @@
 <div class="container">
   <h2>INGREDIENTS MANAGEMENT</h2>
 
-<div class="form-section">
-  <form method="POST" action="{% url 'ingredients' %}">
-    {% csrf_token %}
-    <div style="display: flex; gap: 10px; align-items: flex-end;">
-      <div style="display: flex; flex-direction: column;">
-        <label>Ingredient name:</label>
-        <input type="text" name="name" placeholder="Enter ingredient name" required>
+  <!-- Add/Edit Form -->
+  <div class="form-section">
+    <form method="POST">
+      {% csrf_token %}
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+        <div style="display: flex; flex-direction: column;">
+          <label>Ingredient Name:</label>
+          <input type="text" name="name" value="{{ ingredient_to_edit.name|default_if_none:'' }}" placeholder="Enter ingredient name" required>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <label>Quantity:</label>
+          <input type="number" name="quantity" value="{{ ingredient_to_edit.quantity|default_if_none:0 }}" min="0" required>
+        </div>
+        <!-- Add button inline -->
+        <div>
+          <button type="submit" class="add-btn">
+            {% if ingredient_to_edit %}Update{% else %}Add Ingredient{% endif %}
+          </button>
+        </div>
       </div>
-      <div style="display: flex; flex-direction: column;">
-        <label>Quantity:</label>
-        <input type="number" name="quantity" placeholder="0" min="0" required>
-      </div>
-      <div>
-        <button type="submit" class="add-btn">Add Ingredient</button>
-      </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
 
-
+  <!-- Ingredients Table -->
   <table>
     <thead>
       <tr>
@@ -45,15 +48,15 @@
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody id="tableBody">
-      {% for ingredient in ingredients %}
-      <tr data-id="{{ ingredient.id }}">
-        <td>{{ ingredient.id }}</td>
-        <td>{{ ingredient.name }}</td>
-        <td>{{ ingredient.quantity }}</td>
+    <tbody>
+      {% for ing in ingredients %}
+      <tr>
+        <td>{{ ing.id }}</td>
+        <td>{{ ing.name }}</td>
+        <td>{{ ing.quantity }}</td>
         <td>
-          <a href="{% url 'update_ingredient' ingredient.id %}" class="action-btn edit-btn">Edit</a>
-          <a href="{% url 'delete_ingredient' ingredient.id %}" class="action-btn delete-btn">Delete</a>
+          <a href="{% url 'update_ingredient' ing.id %}" class="action-btn edit-btn">Edit</a>
+          <a href="{% url 'delete_ingredient' ing.id %}" class="action-btn delete-btn">Delete</a>
         </td>
       </tr>
       {% empty %}
@@ -62,45 +65,6 @@
     </tbody>
   </table>
 </div>
-
-<script>
-  const searchInput = document.getElementById('searchInput');
-  const sortSelect = document.getElementById('sortSelect');
-  const tableBody = document.getElementById('tableBody');
-
-  function renderTable() {
-    const rows = Array.from(tableBody.querySelectorAll('tr'));
-    const searchTerm = searchInput.value.toLowerCase();
-
-    rows.forEach(row => {
-      const name = row.children[1].textContent.toLowerCase();
-      const quantity = row.children[2].textContent.toLowerCase();
-      row.style.display = (name.includes(searchTerm) || quantity.includes(searchTerm)) ? '' : 'none';
-    });
-
-    const sortValue = sortSelect.value;
-    if (!sortValue) return;
-
-    rows.sort((a, b) => {
-      const nameA = a.children[1].textContent.toLowerCase();
-      const nameB = b.children[1].textContent.toLowerCase();
-      const quantityA = parseInt(a.children[2].textContent);
-      const quantityB = parseInt(b.children[2].textContent);
-
-      switch(sortValue) {
-        case 'nameAsc': return nameA.localeCompare(nameB);
-        case 'nameDesc': return nameB.localeCompare(nameA);
-        case 'quantityAsc': return quantityA - quantityB;
-        case 'quantityDesc': return quantityB - quantityA;
-      }
-    });
-
-    rows.forEach(row => tableBody.appendChild(row));
-  }
-
-  searchInput.addEventListener('input', renderTable);
-  sortSelect.addEventListener('change', renderTable);
-</script>
 
 </body>
 </html>
