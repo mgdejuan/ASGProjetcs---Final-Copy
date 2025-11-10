@@ -21,6 +21,7 @@ urlpatterns = [
 
 
     path('packaging/', views.packaging, name='packaging'),
-    path('packaging/update/<int:packaging_id>/', views.packaging, name='update_packaging'),
+    path('packaging/update/<int:id>/', views.update_packaging, name='update_packaging'),
     path('packaging/delete/<int:id>/', views.delete_packaging, name='delete_packaging'),
+
 ]
