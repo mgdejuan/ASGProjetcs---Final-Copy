@@ -135,3 +135,9 @@ input.quantity-input {
   border: 1px solid #ddd;
   text-align: center;
 }
+/* Remove up/down arrows from number input fields */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
